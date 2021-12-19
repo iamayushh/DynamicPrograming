@@ -1,21 +1,6 @@
+import java.util.*;
 import java.util.Arrays;
-import java.util.Scanner;
-
-public class KnapSackRecursive {
-    public static int[][] t= new int[100][100];
-    public static void setMat(int t[][])
-    {
-        int i=0;
-        int j=0;
-        for(i=0;i<100;i++)
-        {
-            for(j=0;j<100;j++)
-            {
-                t[i][j]=-1;
-            }
-        }
-    }
-
+public class KnapSackTopDown {
     public static void main(String args[])
     {
         Scanner sc=new Scanner(System.in);
@@ -53,30 +38,36 @@ public class KnapSackRecursive {
             System.out.print(valueItem[i]+" ");
         }
         //System.out.println(t[1][1]);
-        setMat(t);
+
         //System.out.println(t[1][1]);
         int maxProfit=knapSack(weightItem,valueItem,n,totalbagweight);
         System.out.println("Final answer is "+maxProfit);
 
 
     }
-    static int knapSack(int[] weight, int[] value, int n, int totalweight)
+    static int knapSack(int weight[],int values[],int n,int totalbagweight)
     {
-      if(n==0 || totalweight==0)
-      {
-          return 0;
-      }
-      if(t[n][totalweight]!=-1)
-      {
-          return t[n][totalweight];
-      }
-      if(weight[n-1]<=totalweight)
-      {
-          return t[n][totalweight]=Math.max(value[n-1]+knapSack(weight,value,n-1,totalweight-weight[n-1]),knapSack(weight,value,n-1,totalweight));
-      }
-      else
-      {
-          return t[n][totalweight]=knapSack(weight,value,n-1,totalweight);
-      }
+        int[][] t=new int[n+1][totalbagweight+1];
+        int i=0;
+        int j=0;
+        for(i=0;i<n+1;i++)
+        {
+            for(j=0;j<totalbagweight+1;j++)
+            {
+                if(i==0 || j==0)
+                {
+                    t[i][j]=0;
+                }
+                else if(weight[n-1]<=totalbagweight)
+                {
+                    t[n][totalbagweight]=Math.max(values[n-1]+t[n-1][totalbagweight-weight[n-1]],t[n-1][totalbagweight]);
+                }
+                else
+                {
+                    t[n][totalbagweight]=t[n-1][totalbagweight];
+                }
+            }
+        }
+        return t[n][totalbagweight];
     }
 }
